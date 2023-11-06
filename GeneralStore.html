@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+        <head>
+            <link rel="stylesheet" href="style.css">
+        </head>
+    <body>
+        <header>
+            <h1>Inventory Details</h1>
+        </header>
+        <div class="container">
+          <form id="my-form">
+            <div class="msg" style="color:red;"></div>
+        <div>
+            <label>Item Name</label>
+            <input type="text" id="name">
+        </div>
+        <div>
+            <label>Description</label>
+            <input type="text" id="description">
+        </div>
+        <div>
+            <label>Price</label>
+            <input type="text" id="price">
+        </div>
+        <div>
+            <label>Quantity</label>
+            <input type="text" id="quantity">
+        </div>
+        <div>
+            <input type="submit" value="Add Item" class="btnOne">
+        </div>
+          </form>
+        </div>
+        <ul id="Item">
+        </ul>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+        <script>
+            const myForm = document.querySelector('#my-form');
+const nameIn = document.querySelector('#name');
+const description = document.querySelector('#description');
+const price = document.querySelector('#price');
+const quantity = document.querySelector('#quantity');
+const ItemList = document.querySelector('#Item');
+const msg = document.querySelector('.msg');
+window.addEventListener("DOMContentLoaded",()=>{
+    axios.get("https://crudcrud.com/api/a780ef40c83c4bfd96f529d53f38d126/InventoryData")
+    .then((res)=>{
+        console.log(res)
+        for(var i=0;i<res.data.length;i++)
+        {
+          ShowItemOnScreen(res.data[i])
+        }
+    })
+    .catch((err)=>console.log(err))
+})
+myForm.addEventListener('submit',onSubmit);
+
+function onSubmit(e){
+    e.preventDefault();
+    console.log(e);
+    if(nameIn.value === '' || description.value === '' || price.value === '' || quantity==='')
+    {
+        msg.innerHTML = "Enter all fields";
+        setTimeout(() => msg.remove(),3000);
+    }
+    else{       
+        let data ={
+            "name":nameIn.value,
+            "description":description.value,
+            "price":price.value,
+            "quantity":quantity.value
+        } ;
+        axios.post("https://crudcrud.com/api/a780ef40c83c4bfd96f529d53f38d126/InventoryData",data)
+        .then((res)=>{
+            console.log(res)
+        })
+        .catch((err)=>console.log(err))
+
+    }
+}
+
+function ShowItemOnScreen(Item){
+    
+    const li = document.createElement('li');
+        const btnOne=document.createElement('input');
+        const btnTwo = document.createElement('input');
+        const btnThree = document.createElement('input');
+        btnOne.type="button";
+        btnOne.value="Buy 1";
+        btnOne.className="btnOne1";
+        li.appendChild(document.createTextNode(`${Item.name}  ${Item.description}   ${Item.price}   ${Item.quantity}`));
+        li.appendChild(btnOne);
+        li.appendChild(btnTwo);
+        li.appendChild(btnThree);
+        ItemList.appendChild(li);
+
+        let descriptionInput=Item.description;
+        let nameInput=Item.name;
+        let priceInput=Item.price;
+        let qtyInput=Item.quantity;
+        btnOne.addEventListener('click',onclick);
+        function onclick(e){
+          e.preventDefault();
+          const url="https://crudcrud.com/api/a780ef40c83c4bfd96f529d53f38d126/InventoryData/";
+          const ID=Item._id;
+          let ItemDetails=url+ID;
+          let UpQty=Item.quantity-1;
+          axios.put(ItemDetails,{
+            name:Item.name,
+            description:Item.description,
+            price:Item.price,
+            quantity:UpQty
+          })
+          .then((res)=>console.log(res))
+          .catch((err)=>console.log(err));
+       }
+       btnTwo.type="button";
+       btnTwo.value="Buy 2";
+        btnTwo.className="btn1";
+        btnTwo.addEventListener('click',onclickTwo);
+        function onclickTwo(e){
+            e.preventDefault();
+            const url="https://crudcrud.com/api/a780ef40c83c4bfd96f529d53f38d126/InventoryData/";
+          const ID=Item._id;
+          let ItemDetails=url+ID;
+          let UpQty=Item.quantity-2;
+          axios.put(ItemDetails,{
+            name:Item.name,
+            description:Item.description,
+            price:Item.price,
+            quantity:UpQty
+          })
+          .then((res)=>console.log(res))
+          .catch((err)=>console.log(err));
+        }
+        btnThree.type="button";
+       btnThree.value="Buy 3";
+        btnThree.className="btn1";
+        btnThree.addEventListener('click',onclickThree);
+        function onclickThree(e){
+            e.preventDefault();
+            const url="https://crudcrud.com/api/a780ef40c83c4bfd96f529d53f38d126/InventoryData/";
+          const ID=Item._id;
+          let ItemDetails=url+ID;
+          let UpQty=Item.quantity-3;
+          axios.put(ItemDetails,{
+            name:Item.name,
+            description:Item.description,
+            price:Item.price,
+            quantity:UpQty
+          })
+          .then((res)=>console.log(res))
+          .catch((err)=>console.log(err));
+        }
+
+            }
+            nameIn.value="";
+            description.value="";
+            price.value="";
+            quantity.value="";
+    </script>
+    </body>
+</html>
