@@ -105,10 +105,33 @@ function ShowUserOnScreen(user){
           .catch((err)=>console.log(err));
           //localStorage.removeItem(emailInput);
        }
-       
-
+       editBtn.type="button";
+        editBtn.value="Edit";
+        editBtn.className="btn1";
+        editBtn.addEventListener('click',onclickEdit);
+        function onclickEdit(e){
+            e.preventDefault();
+            nameIn.value=user.name;
+            email.value=user.email;
+            number.value=user.number;
+            userList.removeChild(li);
+            deleteUser(user._id)
+        //    const url="https://crudcrud.com/api/38ff4523ae0a4945b0be1240464109ca/appointmentData/";
+        //   const ID=user._id
+        //   let UserDetails=url+ID;
+        //     axios.put(UserDetails)
+        //     .then((res)=>console.log(res))
+        //     .catch((err)=>console.log(err));
+    //         localStorage.removeItem(emailInput);
         }
-   
+        function deleteUser(UserID){
+            const url="https://crudcrud.com/api/38ff4523ae0a4945b0be1240464109ca/appointmentData/";
+          let UserDetails=url+UserID;
+        axios.delete(UserDetails)
+          .then((res)=>console.log(res))
+          .catch((err)=>console.log(err));
+        }
+            }
     </script>
     </body>
 </html>
