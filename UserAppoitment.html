@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+        <head>
+            <link rel="stylesheet" href="style.css">
+        </head>
+    <body>
+        <header>
+            <h1>User Details</h1>
+        </header>
+        <div class="container">
+          <form id="my-form">
+            <div class="msg"></div>
+        <div>
+            <label>User Name</label>
+            <input type="text" id="name">
+        </div>
+        <div>
+            <label>Email ID</label>
+            <input type="text" id="email">
+        </div>
+        <div>
+            <label>Phone Number</label>
+            <input type="text" id="number">
+        </div>
+        <div>
+            <input type="submit" class="btn">
+        </div>
+          </form>
+        </div>
+        <ul id="User">
+        </ul>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+        <script>
+            const myForm = document.querySelector('#my-form');
+const nameIn = document.querySelector('#name');
+const email = document.querySelector('#email');
+const number = document.querySelector('#number');
+const userList = document.querySelector('#User');
+const msg = document.querySelector('.msg');
+window.addEventListener("DOMContentLoaded",()=>{
+    axios.get("https://crudcrud.com/api/38ff4523ae0a4945b0be1240464109ca/appointmentData")
+    .then((res)=>{
+        console.log(res)
+        for(var i=0;i<res.data.length;i++)
+        {
+          ShowUserOnScreen(res.data[i])
+        }
+    })
+    .catch((err)=>console.log(err))
+})
+myForm.addEventListener('submit',onSubmit);
+
+function onSubmit(e){
+    e.preventDefault();
+    console.log(e);
+    if(nameIn.value === '' || email.value === '' || number.value === '')
+    {
+        msg.innerHTML = "enter all fields";
+        setTimeout(() => msg.remove(),3000);
+    }
+    else{       
+        let data ={
+            "name":nameIn.value,
+            "email":email.value,
+            "number":number.value
+        } ;
+        //let data1=JSON.stringify(data);
+        //console.log(data1);
+        axios.post("https://crudcrud.com/api/38ff4523ae0a4945b0be1240464109ca/appointmentData",data)
+        .then((res)=>{
+            console.log(res)
+        })
+        .catch((err)=>console.log(err))
+       //localStorage.setItem(email.value,data1);
+
+    }
+}
+
+function ShowUserOnScreen(user){
+    
+    const li = document.createElement('li');
+        const btn=document.createElement('input');
+        const editBtn = document.createElement('input');
+        btn.type="button";
+        btn.value="Delete";
+        btn.className="btn1";
+        li.appendChild(document.createTextNode(`${user.name}- ${user.email}- ${user.number}`));
+        li.appendChild(btn);
+        li.appendChild(editBtn);
+        userList.appendChild(li);
+
+        let emailInput=user.email;
+        let nameInput=user.name;
+        let numberInput=user.number;
+        btn.addEventListener('click',onclick);
+        function onclick(e){
+                    //localStorage.removeItem(emailInput);
+       }
+       
+
+        }
+   
+    </script>
+    </body>
+</html>
